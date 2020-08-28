@@ -200,5 +200,50 @@ small">Courses</span></a>
       document.getElementById("sideMenu").style.width = "0px"; //close up menu
     }
   }); 
+
+ //The code below was developed in class on 8/28
+ //It supports user interaction with the bottom mode bar.
+ //When you click on a mode button, it becomes the currently highlighted button, 
+ //toggling the mode.
+
+  document.getElementById("coursesMode").addEventListener("click",function(e) {
+    if (!this.classList.contains("menuItemSelected")) {
+      this.classList.add("menuItemSelected");
+      //Check which mode button is currently selected and unhighlight it
+      if (document.getElementById("roundsMode").classList.contains("menuItemSelected")) {
+        //RoundsMode is current mode
+        document.getElementById("roundsMode").classList.remove("menuItemSelected");
+      } else { //must be feedMode
+        document.getElementById("feedMode").classList.remove("menuItemSelected");
+      }
+    } 
+  }); 
+
+  document.getElementById("roundsMode").addEventListener("click",function(e) {
+    if (!this.classList.contains("menuItemSelected")) {
+      this.classList.add("menuItemSelected");
+      //Check which mode button is currently selected and unhighlight it
+      if (document.getElementById("feedMode").classList.contains("menuItemSelected")) {
+        //feedMode is current mode
+        document.getElementById("feedMode").classList.remove("menuItemSelected");
+      } else { //must be coursesMode
+        document.getElementById("coursesMode").classList.remove("menuItemSelected");
+      }
+    } 
+  }); 
+
+  document.getElementById("feedMode").addEventListener("click",function(e) {
+    if (!this.classList.contains("menuItemSelected")) {
+      this.classList.add("menuItemSelected");
+      //Check which mode button is currently selected and unhighlight it
+      if (document.getElementById("roundsMode").classList.contains("menuItemSelected")) {
+        //RoundsMode is current mode
+        document.getElementById("roundsMode").classList.remove("menuItemSelected");
+      } else { //must be coursesMode
+        document.getElementById("coursesMode").classList.remove("menuItemSelected");
+      }
+    } 
+  }); 
+
   </script>
 </html>
