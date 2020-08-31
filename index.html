@@ -71,27 +71,28 @@
    </div>
    <!--BEGIN MENU CONTENT-->
  <div id="mainMenuContent">
- <!--BEGIN GROUP OF MODE/ACTION BUTTONS -->
- <!--Mode buttons show current mode Action buttons are contextual; they provide
-    easy access to most important functionality in current mode 
-  -->
-  <a id= "" class=""><span class=""></span>&nbsp;Feed</a>
-  <a id= "" class=""><span class=""></span>&nbsp;Followed Users</a>
-
-   <a id= "" class=""><span class=""></span>&nbsp;All Rounds</a>
-  <a id= "" class=""><span class=""></span>&nbsp;Log New Round</a>
+  <!--BEGIN GROUP OF MODE/ACTION BUTTONS -->
+  <!--Mode buttons show current mode Action buttons are contextual; they provide
+     easy access to most important functionality in current mode 
+   -->
+   <a class="feedModeItem"><span></span>&nbsp;Feed</a>
+   <a class="feedModeItem"><span></span>&nbsp;Followed Users</a>
  
-  <a id= "" class="" ><span class=""></span>&nbsp;All Courses</a>
-  <a id= "" class=""><span class=""></span>&nbsp;Add a Course</a>
-   <!-- END GROUP OF MODE/ACTION BUTTONS -->
-</div>
-<!-- END MAIN MENU CONTENT -->
+   <a class="roundsModeItem"><span></span>&nbsp;All Rounds</a>
+   <a class="roundsModeItem"><span></span>&nbsp;Log New Round</a>
+  
+   <a class="coursesModeItem" ><span></span>&nbsp;All Courses</a>
+   <a class="coursesModeItem"><span></span>&nbsp;Add a Course</a>
+    <!-- END GROUP OF MODE/ACTION BUTTONS -->
+ </div>
+ <!-- END MAIN MENU CONTENT -->
+ 
 </div>
 <!-- END SIDEMENU -->
 
 <!-- BEGIN FIXED BOTTOM BAR -->
 <div class="bottombar">
-<a id="feedMode" class="bottomBarBtn"><span style="display:block; padding-top:3px"
+<a id="feedMode" class="bottomBarBtn menuItemSelected"><span style="display:block; padding-top:3px"
 class="nonMenuItem fas fa-th-list"></span><span style="display:block;font-size:
 small">Feed</span></a>
 <a id="roundsMode" class="bottomBarBtn"><span style="display:block; padding-top:3px"
@@ -106,7 +107,7 @@ small">Courses</span></a>
   <!-- BEGIN APP PAGE DEFINITIONS -->
  
    <!-- Activity feed page for viewing feed -->
-   <div id="activityFeedDiv"  class="paddedPage">
+   <div id="feedModeDiv"  class="paddedPage">
     <h1 align="center">Activity Feed</h1>
     <center>
     <h2>This page is under construction.</h2>
@@ -130,7 +131,7 @@ small">Courses</span></a>
     </div>
 
   <!-- Rounds page displaying the user's round history -->
-  <div id="roundsDiv" class="paddedPage" hidden>
+  <div id="roundsModeDiv" class="paddedPage" hidden>
       <h1 align="center">Rounds Page</h1>
     <center>
     <h2>This page is under construction.</h2>
@@ -154,7 +155,7 @@ small">Courses</span></a>
   </div>
 
    <!-- Page  for displaying and searching for courses -->
-   <div id="coursesDiv"  class="paddedPage" hidden>
+   <div id="coursesModeDiv"  class="paddedPage" hidden>
       <h1 align="center">Courses Page</h1>
       <center>
         <h2>This page is under construction.</h2>
@@ -180,6 +181,37 @@ small">Courses</span></a>
     
   <!-- Begin SCRIPT section of document. -->
   <script>
+    var mode = "feedMode";
+    var modeToTitle = {
+      "feedMode": "Activity Feed",
+      "roundsMode": "My Rounds",
+       "coursesMode": "Courses"
+    };
+
+    //At startup, hide all menu items except for Activity Feed items:
+    var roundItems = document.getElementsByClassName("roundsModeItem");
+    var courseItems = document.getElementsByClassName("coursesModeItem");
+    for (var i = 0; i < roundItems.length; ++i) {
+      roundItems[i].style.display = "none";
+    }
+
+    for (var i = 0; i < courseItems.length; ++i) {
+      courseItems[i].style.display = "none";
+    }
+
+    //document click: If the user clicks anywhere in the document while the side
+    //menu is open, we need to close the menu, toggle the menu state, and
+    //re-enable all buttons/input fields on the page.
+    document.addEventListener("click",function(e) {
+      if (document.getElementById("menuBtnIcon").classList.contains("fa-times")) {
+        //Menu is open
+        document.getElementById("menuBtnIcon").classList.
+          remove("fa-times"); //Change back to hamburger when menu closed
+        document.getElementById("menuBtnIcon").classList.add("fa-bars");
+        document.getElementById("sideMenu").style.width = "0"; //retract menu
+      }
+    });
+
   //menuBtn click: When the top-left side menu button is clicked and the menu
   //is closed, we need to open it and toggle menu state variable.
   document.getElementById("menuBtn").addEventListener("click",function(e) {
@@ -199,51 +231,36 @@ small">Courses</span></a>
       document.getElementById("menuBtnIcon").classList.add("fa-bars");
       document.getElementById("sideMenu").style.width = "0px"; //close up menu
     }
+    e.stopPropagation();
   }); 
 
- //The code below was developed in class on 8/28
- //It supports user interaction with the bottom mode bar.
- //When you click on a mode button, it becomes the currently highlighted button, 
- //toggling the mode.
+  //bottomBarBtnClick -- When a button in the bottom bar is clicked, we toggle the mode.
+  var bottomBarBtnClick = function() {
+    var prevMode = mode;
+    //Switch mode button that is highlighted
+    document.getElementById(mode).classList.remove("menuItemSelected");
+    mode = this.id;
+    this.classList.add("menuItemSelected");
+    //Change page title
+    document.getElementById("topBarTitle").textContent = modeToTitle[mode];
+    //Swap out page content
+    document.getElementById(prevMode + "Div").style.display = "none";
+    document.getElementById(mode + "Div").style.display = "block";
+    //Change menu items
+    var oldItems = document.getElementsByClassName(prevMode + "Item");
+    var newItems = document.getElementsByClassName(mode + "Item");
+    for (var i = 0; i < oldItems.length; ++i) {
+      oldItems[i].style.display = "none";
+    }
+    for (var i = 0; i < newItems.length; ++i) {
+      newItems[i].style.display = "block";
+    }
+  }
 
-  document.getElementById("coursesMode").addEventListener("click",function(e) {
-    if (!this.classList.contains("menuItemSelected")) {
-      this.classList.add("menuItemSelected");
-      //Check which mode button is currently selected and unhighlight it
-      if (document.getElementById("roundsMode").classList.contains("menuItemSelected")) {
-        //RoundsMode is current mode
-        document.getElementById("roundsMode").classList.remove("menuItemSelected");
-      } else { //must be feedMode
-        document.getElementById("feedMode").classList.remove("menuItemSelected");
-      }
-    } 
-  }); 
-
-  document.getElementById("roundsMode").addEventListener("click",function(e) {
-    if (!this.classList.contains("menuItemSelected")) {
-      this.classList.add("menuItemSelected");
-      //Check which mode button is currently selected and unhighlight it
-      if (document.getElementById("feedMode").classList.contains("menuItemSelected")) {
-        //feedMode is current mode
-        document.getElementById("feedMode").classList.remove("menuItemSelected");
-      } else { //must be coursesMode
-        document.getElementById("coursesMode").classList.remove("menuItemSelected");
-      }
-    } 
-  }); 
-
-  document.getElementById("feedMode").addEventListener("click",function(e) {
-    if (!this.classList.contains("menuItemSelected")) {
-      this.classList.add("menuItemSelected");
-      //Check which mode button is currently selected and unhighlight it
-      if (document.getElementById("roundsMode").classList.contains("menuItemSelected")) {
-        //RoundsMode is current mode
-        document.getElementById("roundsMode").classList.remove("menuItemSelected");
-      } else { //must be coursesMode
-        document.getElementById("coursesMode").classList.remove("menuItemSelected");
-      }
-    } 
-  }); 
-
+  //Add bottomBarBtnClick as the click handler for each bottom bar button
+  var bottomBtns = document.getElementsByClassName("bottomBarBtn");
+  for (var i = 0; i < bottomBtns.length; ++i) {
+    bottomBtns[i].addEventListener("click",bottomBarBtnClick);
+  }
   </script>
 </html>
