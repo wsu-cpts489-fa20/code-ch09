@@ -166,4 +166,11 @@ document.getElementById("logoutItem").onclick = function() {
 document.getElementById("aboutItem").onclick = function() {
     document.getElementById("aboutModal").style.display = "block";
 };
-  
+
+//closeModal -- Close the About dialog box
+function closeModal() {
+    document.getElementById("aboutModal").style.display = "none";
+}
+//Bind closeModal to click event of About box "X" and "OK" buttons
+document.getElementById("modalClose").onclick = closeModal;
+document.getElementById("aboutOK").onclick = closeModal;
