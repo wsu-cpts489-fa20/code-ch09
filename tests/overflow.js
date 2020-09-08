@@ -1,8 +1,3 @@
-import { Selector } from 'testcafe';
-
-fixture `SpeedScore Interactions`
-    .page `http://127.0.0.1:5500/index.html`;
-
 test('LoginGoesToActivityFeed', async t => {
     await t
         .typeText('#emailInput', 'hundhaus@wsu.edu')
