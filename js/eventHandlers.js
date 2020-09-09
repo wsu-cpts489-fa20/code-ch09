@@ -142,6 +142,16 @@ function login() {
 //entered speedgolf round, we need to save it to local storage
 document.getElementById("logRoundForm").onsubmit = function(e) {
   e.preventDefault(); //We do NOT want the button to trigger a page reload!
+  document.getElementById("logRoundIcon").classList.add("fas", "fa-spinner", "fa-spin");
+  //Set spinner to spin for one second, after which saveRoundData will be called
+  setTimeout(saveRoundData,1000);
+}
+
+//saveRoundData -- Callback function called from logRoundForm's submit handler.
+//Stops the spinner and then saves the entered round data to local storage.
+function saveRoundData() {
+  document.getElementById("logRoundIcon").classList.remove("fas","fa-spinner", "fa-spin");
+  document.getElementById("logRoundIcon").classList.add("fas","fa-save");
 
   //Retrieve from localStorage this user's rounds and roundCount
   let thisUser = localStorage.getItem("userId");
@@ -168,8 +178,11 @@ document.getElementById("logRoundForm").onsubmit = function(e) {
   data[thisUser].rounds[data[thisUser].roundCount] = thisRound;
   //Commit updated user data to app data in local storage
   localStorage.setItem("speedScoreUserData",JSON.stringify(data));
+  //Go back to "My Rounds" page by programmatically clicking the menu button
+  document.getElementById("menuBtn").click();
+  //Clear form to ready for next use
+  clearRoundForm();
 }
- 
   
   //startUp -- This function sets up the initial state of the app: Login page is
   //visible, bottom bar is invisible, all menu items invisible except feed items,
@@ -221,6 +234,21 @@ document.getElementById("logRoundForm").onsubmit = function(e) {
       Date.now()-(new Date()).getTimezoneOffset()*60000;
 
   }; //Startup
+
+//clearRoundForm -- Helper function that clears out data previously entered into
+//the "Log New Round" form and resets all fields to their default values
+function clearRoundForm() {
+  document.getElementById("roundDate").valueAsNumber = 
+  Date.now()-(new Date()).getTimezoneOffset()*60000;
+  document.getElementById("roundCourse").value = "";
+  document.getElementById("roundType").value = "practice";
+  document.getElementById("roundHoles").value = "18";
+  document.getElementById("roundStrokes").value = "80";
+  document.getElementById("roundMinutes").value = "50";
+  document.getElementById("roundSeconds").value = "00";
+  document.getElementById("roundSGS").value = "130:00";
+  document.getElementById("roundNotes").value = "";
+}
 
 //LOG OUT ITEM CLICK -- When the user clicks the "Log Out" button
 //log them out of the app and redisplay the log in screen
