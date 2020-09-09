@@ -121,6 +121,22 @@ function login() {
     //Write login name of user who just logged in to localStorage
     let thisUser = document.getElementById("emailInput").value;
     localStorage.setItem("userId",thisUser);
+    //Check whether we have saved data on this (or any) SpeedScore user:
+    let data = localStorage.getItem("speedScoreUserData");
+    if (data == null) { 
+      //No SpeedScore user data stored yet -- create blank record for current user
+      localStorage.setItem("speedScoreUserData",
+        JSON.stringify({thisUser : {"rounds" : {}, "roundCount": 0}}));  
+    } else {
+    //app data exists -- check if data exists for thisUser
+    data = JSON.parse(data);
+    if  (!data.hasOwnProperty(thisUser)) { 
+      //No data for this user -- create empty data
+      data[thisUser] = {"rounds": {}, "roundCount": 0}; 
+      localStorage.setItem("speedScoreUserData",JSON.stringify(data));
+    }
+ }
+
   };
   
   //startUp -- This function sets up the initial state of the app: Login page is
