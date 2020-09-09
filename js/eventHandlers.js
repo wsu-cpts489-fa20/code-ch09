@@ -118,6 +118,9 @@ function login() {
     document.getElementById("feedModeDiv").style.display = "block";
     //Set mode to feedMode
     mode = "feedMode";
+    //Write login name of user who just logged in to localStorage
+    let thisUser = document.getElementById("emailInput").value;
+    localStorage.setItem("userId",thisUser);
   };
   
   //startUp -- This function sets up the initial state of the app: Login page is
