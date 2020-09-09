@@ -69,6 +69,7 @@
       <span id="userID" style="font-size:14px">&nbsp;Chris
       Hundhausen&nbsp;&nbsp;</span>
    </div>
+   <h2></h2>
    <!--BEGIN MENU CONTENT-->
  <div id="mainMenuContent">
   <!--BEGIN GROUP OF MODE/ACTION BUTTONS -->
@@ -79,7 +80,7 @@
    <a class="menuItem feedModeItem" hidden><span></span>&nbsp;Followed Users</a>
  
    <a class="menuItem roundsModeItem" hidden><span></span>&nbsp;All Rounds</a>
-   <a class="menuItem roundsModeItem" hidden><span></span>&nbsp;Log New Round</a>
+   <a class="menuItem roundsModeItem" id="logRoundItem" hidden><span class="fas fa-plus"></span>&nbsp;Log New Round</a>
   
    <a class="menuItem coursesModeItem" hidden><span></span>&nbsp;All Courses</a>
    <a class="menuItem coursesModeItem" hidden><span></span>&nbsp;Add a Course</a>
@@ -93,7 +94,7 @@
 <!-- END SIDEMENU -->
 
 <!-- BEGIN FIXED BOTTOM BAR -->
-<div class="bottombar" hidden>
+<div class="bottombar" id="bottomBar" hidden>
 <a id="feedMode" class="bottomBarBtn menuItemSelected"><span style="display:block; padding-top:3px"
 class="nonMenuItem fas fa-th-list"></span><span style="display:block;font-size:
 small">Feed</span></a>
@@ -181,11 +182,12 @@ small">Courses</span></a>
                  <p></p>
                  <!-- Password must be 8 chars and contain at least 
                       1 number, 1 upper, 1 lower, 1 special char-->
+                 <!-- pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$" -->
                  <label for="passwordInput" style="padding:0px;
                  font-size:24px">Password: 
                      <input class="form-control" type="password"
                      placeholder="Enter Password" id="passwordInput"
-                     pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+                    
                      style="text-align:center;width:90%; height:10%; font-size:
                      24px" required>
                  </label>
@@ -232,7 +234,7 @@ small">Courses</span></a>
     </div>
 
   <!-- Rounds page displaying the user's round history -->
-  <div id="roundsModeDiv" class="paddedPage" hidden>
+  <div id="roundsModeDiv" class="roundsModeDiv paddedPage" hidden>
       <h1 align="center">Rounds Page</h1>
     <center>
     <h2>This page is under construction.</h2>
@@ -244,15 +246,58 @@ small">Courses</span></a>
   </div>
 
   <!-- Page for logging a new round -->
-  <div id="logRoundDiv" class="paddedPage" hidden>
-      <h1 align="center">Log Round Page</h1>
+  <div id="logRoundDiv" class="roundsModeDiv paddedPage">
       <center>
-        <h2>This page is under construction.</h2>
-        <img src="https://dl.dropboxusercontent.com/s/qpjhy9x9gwdxpob/SpeedScoreLogo64Trans.png" height="200" width="200">
-        <p style="font-style:italic">Version CptS 489 Demo<br>
-           &copy; 2017-19 The Professor of Speedgolf. All rights reserved.
-        </p>
-        </center>
+      <h1></h1>
+     <form id="logRoundForm">
+       <center>
+        <label for="roundDate">Date:
+          <input id="roundDate" class="form-control form-center" type="date" 
+          value= required>
+      </label>
+      <p></p>
+      <label for="roundCourse">Course:
+        <input id="roundCourse" 
+               class="form-control form-center" type="text" 
+               placeholder="Course played" size="50" maxlength="50" required>
+        </label>
+     <p></p>
+     <label for="roundType">Type:
+      <select name="roundType" class="form-control form-center">
+        <option value="practice" selected>Practice</option>
+        <option value="tournament">Tournament</option>
+      </select> 
+      </label>
+      <p></p>
+      <label for="roundStrokes">Strokes:
+        <input id="roundStrokes" class="form-control form-center" type="number" 
+                min="9" max="200" value="80" 
+                onChange="updateSGS()" required>
+      </label>
+      <p></p>
+      <label for="roundTime">Time:<br>
+        <input id="roundMinutes" type="number" size="3"
+        min="10" max="400" value="50" style="text-align: right"
+        onChange="updateSGS()" required> : 
+        <input id="roundSeconds" type="number" size="2"
+        min="0" max="60" value="00" onchange="changeSeconds()"
+        required>
+      </label>
+      <p></p>
+      <label for="roundSGS">Speedgolf Score:<br>
+        <input id="roundSGS" class="form-center" type="text" 
+         size="6" value="130:00" disabled>
+      </label>
+      <p></p>
+      <label for="roundNotes">Notes:<br>
+        <textarea id="roundNotes" class="form-control" 
+         rows="6" cols="75" placeholder="Enter round notes""></textarea>
+      </label>
+      <p></p>
+      <button type="submit" id="logRoundBtn" class="btn btn-primary btn-block btncolortheme" 
+            style="width:70%; font-size: 36px"><span id="saveIcon"></span>Log Round</button>
+       </center>
+     </form>
   </div>
 
    <!-- Page  for displaying and searching for courses -->

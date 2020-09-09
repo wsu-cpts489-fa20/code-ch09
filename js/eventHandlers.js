@@ -2,35 +2,46 @@
 //menu is open, we need to close the menu, toggle the menu state, and
 //re-enable all buttons/input fields on the page.
 document.addEventListener("click",function(e) {
-    if (document.getElementById("menuBtnIcon").classList.contains("fa-times")) {
+    if (document.getElementById("sideMenu").style.width == "250px") {
         //Menu is open
-        document.getElementById("menuBtnIcon").classList.
-        remove("fa-times"); //Change back to hamburger when menu closed
-        document.getElementById("menuBtnIcon").classList.add("fa-bars");
-        document.getElementById("sideMenu").style.width = "0"; //retract menu
+        if (!pageLocked) { //Change hamburger back to 'X'
+          document.getElementById("menuBtnIcon").classList.remove("fa-times"); 
+          document.getElementById("menuBtnIcon").classList.add("fa-bars");
+        }
+        document.getElementById("sideMenu").style.width = "0px"; //close menu
     }
-    });
+});
   
 //menuBtn click: When the top-left side menu button is clicked and the menu
-//is closed, we need to open it and toggle menu state variable.
+//is closed, we need to open it
 document.getElementById("menuBtn").addEventListener("click",function(e) {
+    if (pageLocked) { //user is clicking left arrow to exit locked page
+        pageLocked = false;
+        //restore hamburger icon
+        document.getElementById("menuBtnIcon").classList.remove("fa-arrow-left"); 
+        document.getElementById("menuBtnIcon").classList.add("fa-bars"); 
+        //Hide current page
+        let currModePages = document.getElementsByClassName(mode + "Div");
+        for (var i = 0; i < currModePages.length; ++i) {
+          currModePages[i].style.display = "none"; //hide
+        }
+        //Show main mode page
+        document.getElementById(mode + "Div").style.display = "block";
+        //Restore main mode page title
+        document.getElementById("topBarTitle").textContent = modeToTitle[mode];
+        //Re-enable bottom bar buttons
+        document.getElementById("bottomBar").classList.remove("disabledButton");
+        e.stopPropagation();
+        return;
+    }    
     let menuWidth = document.getElementById("sideMenu").style.width;
-    if (menuWidth != "250px") {
-    //Change hamburger to X to open menu
-    document.getElementById("menuBtnIcon").classList.remove("fa-bars"); 
-    document.getElementById("menuBtnIcon").classList.add("fa-times");
-    document.getElementById("sideMenu").style.width = "250px"; //open up menu
-    //menuWidth = document.getElementById("sideMenu").style.width;
-    menuOpen = true;
-    //toggleInputDisabled(true);
-    //e.stopPropagation();
-    } else {
-    //Change X to a hamburger to close menu
-    document.getElementById("menuBtnIcon").classList.remove("fa-times"); 
-    document.getElementById("menuBtnIcon").classList.add("fa-bars");
-    document.getElementById("sideMenu").style.width = "0px"; //close up menu
-    }
-    e.stopPropagation();
+    if (menuWidth != "250px") { //menu is closed -- open it!
+        //Change hamburger to X to open menu
+        document.getElementById("menuBtnIcon").classList.remove("fa-bars"); 
+        document.getElementById("menuBtnIcon").classList.add("fa-times");
+        document.getElementById("sideMenu").style.width = "250px"; //open up menu
+        e.stopPropagation();
+    } 
 }); 
 
 //bottomBarBtnClick -- When a button in the bottom bar is clicked, we toggle the mode.
@@ -153,7 +164,12 @@ function login() {
 
     //set the input focus to the email field of login screen
     document.getElementById("emailInput").focus();
-  };
+
+    //Set default date to today in Log Round Page
+    document.getElementById("roundDate").valueAsNumber = 
+      Date.now()-(new Date()).getTimezoneOffset()*60000;
+
+  }; //Startup
 
 //LOG OUT ITEM CLICK -- When the user clicks the "Log Out" button
 //log them out of the app and redisplay the log in screen
@@ -161,6 +177,23 @@ document.getElementById("logoutItem").onclick = function() {
   startUp();
 };
 
+//logRoundItem click: Take the user to the log round page
+document.getElementById("logRoundItem").onclick = function(e) {
+    //Swap pages:
+    document.getElementById("roundsModeDiv").style.display = "none";
+    document.getElementById("logRoundDiv").style.display = "block";
+    //Change page title:
+    document.getElementById("topBarTitle").textContent = "Log New Round";  
+    //Set pageLocked to true, thus indicating that we're on a page that may only
+    //be exited by clicking on the left arrow at top left
+    pageLocked = true;
+    //When pageLocked is true, the menu  icon is the left arrow
+    document.getElementById("menuBtnIcon").classList.remove("fa-times");
+    document.getElementById("menuBtnIcon").classList.add("fa-arrow-left");
+    //When pageLocked is true, the bottom bar buttons are disabled
+    document.getElementById("bottomBar").classList.add("disabledButton");
+  }
+  
 //ABOUT ITEM click: When the user clicks on "About", 
 //launch the modal About dialog box.
 document.getElementById("aboutItem").onclick = function() {
@@ -174,3 +207,24 @@ function closeModal() {
 //Bind closeModal to click event of About box "X" and "OK" buttons
 document.getElementById("modalClose").onclick = closeModal;
 document.getElementById("aboutOK").onclick = closeModal;
+
+//updateSGS --When the strokes, minutes or seconds fields are updated, we need
+//to update the speedgolf score accordingly.
+function updateSGS() {
+    var strokes = document.getElementById("roundStrokes").valueAsNumber;
+    var minutes = document.getElementById("roundMinutes").valueAsNumber;
+    var seconds = document.getElementById("roundSeconds").value;
+    document.getElementById("roundSGS").value = (strokes + minutes) + ":" + seconds;
+  }
+
+//changeSeconds - When the seconds field is updated, we need to ensure that the
+//seconds field of the round time is zero-padded. We also need to call updateSGS to
+//update the speedgolf score based on the new seconds value.
+function changeSeconds() {
+    var seconds = document.getElementById("roundSeconds").value;
+    if (seconds.length < 2) {
+      document.getElementById("roundSeconds").value = "0" + seconds;
+    }
+    updateSGS();
+  }
+  

@@ -10,6 +10,10 @@ var modeToTitle = {"feedMode": "Activity Feed",
                    "coursesMode": "Speedgolf Courses",
                    "loginMode": "Welcome to SpeedScore"};
 
+//pageLocked captures whether we're on a page that may be exited only 
+//by clicking on the left arrow menu button icon
+var pageLocked = false; 
+
 //Bind bottomBarBtnClick function to all elements of class bottomBarBtn
 var bottomBtns = document.getElementsByClassName("bottomBarBtn");
 for (var i = 0; i < bottomBtns.length; ++i) {

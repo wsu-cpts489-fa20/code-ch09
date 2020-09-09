@@ -87,6 +87,13 @@
             border-color:#13294E;
         }
 
+        .menuItem:hover {
+            cursor: default;
+            text-decoration: none;
+            color: #13294E !important;
+            background-color: #F0F0F0;
+        }
+
         /* side menu button icon styling */
         .menuBtnIcon {
             color:white;
@@ -94,6 +101,7 @@
             cursor:pointer;
             text-align:center;
         }
+
 
         /* side menu styling when menu item selected */
         .menuItemSelected {
@@ -218,4 +226,14 @@
 
 body {
     margin: 0;
+}
+
+.form-center {
+    text-align: center;
+}
+
+/* This class disables a button */
+.disabledButton {
+    pointer-events: none;
+    opacity: 0.4;
 }
