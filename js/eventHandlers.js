@@ -135,9 +135,41 @@ function login() {
       data[thisUser] = {"rounds": {}, "roundCount": 0}; 
       localStorage.setItem("speedScoreUserData",JSON.stringify(data));
     }
- }
-
+    }
   };
+
+//logRoundForm SUBMIT: When the user clicks the "Save" button to save a newly
+//entered speedgolf round, we need to save it to local storage
+document.getElementById("logRoundForm").onsubmit = function(e) {
+  e.preventDefault(); //We do NOT want the button to trigger a page reload!
+
+  //Retrieve from localStorage this user's rounds and roundCount
+  let thisUser = localStorage.getItem("userId");
+  let data = JSON.parse(localStorage.getItem("speedScoreUserData"));
+  //increment roundCount since we're adding a new round
+  data[thisUser].roundCount++;
+  //Initialize empty JavaScript object to store this new round
+  let thisRound = {}; //iniitalize empty object for this round
+  let temp; //temporary value for storying DOM elements as needed
+  //Store the data
+  thisRound.roundNum = data[thisUser].roundCount;
+  thisRound.date = document.getElementById("roundDate").value; //round date
+  thisRound.course = document.getElementById("roundCourse").value;
+  temp = document.getElementById("roundType");
+  thisRound.type = temp.options[temp.selectedIndex].value;
+  temp = document.getElementById("roundHoles");
+  thisRound.numHoles = temp.options[temp.selectedIndex].value;
+  thisRound.strokes = document.getElementById("roundStrokes").value;
+  thisRound.minutes = document.getElementById("roundMinutes").value;
+  thisRound.seconds = document.getElementById("roundSeconds").value;
+  thisRound.SGS = document.getElementById("roundSGS").value;
+  thisRound.notes = document.getElementById("roundNotes").value;
+  //Add this round to associative array of rounds
+  data[thisUser].rounds[data[thisUser].roundCount] = thisRound;
+  //Commit updated user data to app data in local storage
+  localStorage.setItem("speedScoreUserData",JSON.stringify(data));
+}
+ 
   
   //startUp -- This function sets up the initial state of the app: Login page is
   //visible, bottom bar is invisible, all menu items invisible except feed items,
