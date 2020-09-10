@@ -178,6 +178,9 @@ function saveRoundData() {
   data[thisUser].rounds[data[thisUser].roundCount] = thisRound;
   //Commit updated user data to app data in local storage
   localStorage.setItem("speedScoreUserData",JSON.stringify(data));
+  //Debug: Show alert box with current state of speedgolfUserData for debugging purposes
+  data = localStorage.getItem('speedScoreUserData');
+  alert("speedScoreUserData: " +  data);
   //Go back to "My Rounds" page by programmatically clicking the menu button
   document.getElementById("menuBtn").click();
   //Clear form to ready for next use
