@@ -1,3 +1,2 @@
-# code-09-09
-Contains the SpeedScore Repo updated with an About Box and TestCafe test fixture
-This repo serves as the starting point for Chapter 6.
+# code-09-16
+Contains the SpeedScore Project updated through Chapter 8, in which we present speedgolf rounds in a table and allow the user to view, edit and delete rounds. 
