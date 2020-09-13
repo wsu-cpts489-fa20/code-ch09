@@ -169,14 +169,45 @@ function saveRoundData() {
   data.rounds[data.roundCount] = thisRound;
   //Commit updated user data to app data in local storage
   localStorage.setItem(thisUser,JSON.stringify(data));
+  //Add new round to "My Rounds" table
+  addRoundToTable(thisRound.roundNum);
   //Debug: Show alert box with current state of speedgolfUserData for debugging purposes
-  data = localStorage.getItem(thisUser);
-  alert("Data for " + thisUser + ": " +  data);
+  //data = localStorage.getItem(thisUser);
+  //alert("Data for " + thisUser + ": " +  data);
   //Go back to "My Rounds" page by programmatically clicking the menu button
   document.getElementById("menuBtn").click();
   //Clear form to ready for next use
   clearRoundForm();
 }
+
+//addRoundToTable -- Helper function that adds a new round with unique index
+//roundIndex to the "My Rounds" table. The round is a summary view that
+//shows only the date, course and score for the round, together with buttons to
+//view/edit the detailed round data and delete the round data.
+function addRoundToTable(roundIndex) {
+  let user = localStorage.getItem("userId");
+  let data = JSON.parse(localStorage.getItem(user));
+  let rounds = data.rounds;
+ //Test whether table is empty
+ let roundsTable = document.getElementById("myRoundsTable");
+ if (roundsTable.rows[1].innerHTML.includes ("colspan")) {
+   //empty table! Need to remove this row before adding new one
+   roundsTable.deleteRow(1);
+ }
+//Write new row with five cols to table
+ let thisRound = roundsTable.insertRow(1);
+ thisRound.id = "r-" + roundIndex; //set unique id of this row so we can edit/delete later
+ thisRound.innerHTML = "<td>" + rounds[roundIndex].date + "</td><td>" +
+   rounds[roundIndex].course + "</td><td>" + rounds[roundIndex].SGS + 
+   " (" + rounds[roundIndex].strokes +
+   " in " + rounds[roundIndex].minutes + ":" + rounds[roundIndex].seconds + 
+   ")</td>" +
+   "<td><button onclick='editRound(" + roundIndex + ")'><span class='fas fa-eye'>" +
+   "</span>&nbsp;<span class='fas fa-edit'></span></button></td>" +
+   "<td><button onclick='confirmDelete(" + roundIndex + ")'>" +
+   "<span class='fas fa-trash'></span></button></td>";
+}
+
   
   //startUp -- This function sets up the initial state of the app: Login page is
   //visible, bottom bar is invisible, all menu items invisible except feed items,
