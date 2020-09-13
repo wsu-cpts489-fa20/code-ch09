@@ -92,7 +92,7 @@ function login() {
     document.getElementById("menuBtn").disabled = false;
 
     //Show bottom bar buttons and highlight feed mode button
-    document.getElementsByClassName("bottombar")[0].style.display = "block";
+    document.getElementById("bottomBar").style.display = "block";
     document.getElementById("feedMode").classList.add("menuItemSelected");
     document.getElementById("roundsMode").classList.remove("menuItemSelected");
     document.getElementById("coursesMode").classList.remove("menuItemSelected");
@@ -199,7 +199,7 @@ function saveRoundData() {
     document.getElementById("topBarTitle").textContent = "Welcome to SpeedScore";
 
     //Hide the bottom bar initially
-    document.getElementsByClassName("bottombar")[0].style.display = "none";
+    document.getElementById("bottomBar").style.display = "none";
     //Hide all menu items except for Activity Feed items:
     var feedItems = document.getElementsByClassName("feedModeItem");
     var roundItems = document.getElementsByClassName("roundsModeItem");

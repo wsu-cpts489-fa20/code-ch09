@@ -7,7 +7,7 @@
             top: 0;
             width: 100%; /* 100% of width of screen */
             align-content: center;
-            border-radius: 0px;
+            padding: 4px;
             z-index: 100; /* Force it to be on top */
         }
 
@@ -16,8 +16,9 @@
         .navbarItems {
           display: inline-flex; 
           align-items: center; 
-          padding-top: 5px; 
-          padding-bottom: 5px;
+          justify-content: left;
+          padding-top: 2px; 
+          padding-bottom: 2px;
         }
 
         /* sidenav -- The animated side navigation menu */
@@ -138,7 +139,7 @@
       
 /* Styling for the divs in the app. Ensures that the content at top isn't obscured by top bar */
    .paddedPage {
-        padding: 36px 8px 0px 8px;
+        padding: 64px 8px 8px 8px;
         
     }
     
