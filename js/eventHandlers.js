@@ -126,7 +126,12 @@ function login() {
     if (data == null) { 
       //No data for this user yet -- create a blank data store for this user
       localStorage.setItem(thisUser, JSON.stringify({"rounds" : {}, "roundCount": 0}));  
-    } 
+    } else { //There is data for this user; add it to the "My Rounds" table
+      data = JSON.parse(data);
+      for (const thisRound in data.rounds) {
+        addRoundToTable(data.rounds[thisRound].roundNum);
+      } 
+    }
   };
 
 //logRoundForm SUBMIT: When the user clicks the "Save" button to save a newly
