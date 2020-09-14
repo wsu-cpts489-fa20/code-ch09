@@ -298,6 +298,17 @@ function startUp() {
   document.getElementById("roundDate").valueAsNumber = 
     Date.now()-(new Date()).getTimezoneOffset()*60000;
 
+    //Clear out the "My Rounds" table to prepare for a new login
+    let roundsTable = document.getElementById("myRoundsTable");
+    if (!roundsTable.rows[1].innerHTML.includes ("colspan")) {
+      //We have a non-empty table and must clear out rows
+      while (roundsTable.rows.length > 1) {
+        roundsTable.deleteRow(1);
+      }
+      //Add new row to indicate empty table.
+      let newRow = roundsTable.insertRow();
+      newRow.innerHTML = "<td colspan='5' style='font-style: italic'>No rounds logged</td>"; 
+    }
 }; //Startup
 
 //clearRoundForm -- Helper function that clears out data previously entered into
