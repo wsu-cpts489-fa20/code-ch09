@@ -31,6 +31,9 @@ document.getElementById("menuBtn").addEventListener("click",function(e) {
         document.getElementById("topBarTitle").textContent = modeToTitle[mode];
         //Re-enable bottom bar buttons
         document.getElementById("bottomBar").classList.remove("disabledButton");
+        if (mode == "roundsMode") { //restore floating button
+          document.getElementById("floatBtnDiv").style.display = "block";
+        }
         e.stopPropagation();
         return;
     }    
@@ -65,6 +68,12 @@ var bottomBarBtnClick = function() {
     for (var i = 0; i < newItems.length; ++i) {
     newItems[i].style.display = "block";
     }
+    if (mode == "roundsMode") {
+      document.getElementById("floatBtnDiv").style.display = "block";
+  } else {
+      document.getElementById("floatBtnDiv").style.display = "none";
+  }
+
 }
 
 //loginInterface submit: When the login button is clicked, we rely on form
@@ -309,6 +318,8 @@ function startUp() {
       let newRow = roundsTable.insertRow();
       newRow.innerHTML = "<td colspan='5' style='font-style: italic'>No rounds logged</td>"; 
     }
+    //Hide the floating button in case user logged out from Rounds Mode
+    document.getElementById("floatBtnDiv").style.display = "none";
 }; //Startup
 
 //clearRoundForm -- Helper function that clears out data previously entered into
@@ -371,10 +382,12 @@ document.getElementById("logoutItem").onclick = function() {
 };
 
 //logRoundItem click: Take the user to the log round page
-document.getElementById("logRoundItem").onclick = function(e) {
+function logRound() {
     //Swap pages:
     document.getElementById("roundsModeDiv").style.display = "none";
     document.getElementById("logRoundDiv").style.display = "block";
+    //Hide floating button:
+    document.getElementById("floatBtnDiv").style.display = "none";
     //Change page title, submit button title and icon
     document.getElementById("topBarTitle").textContent = "Log New Round"; 
     document.getElementById("logRoundIcon").classList.remove("fa-edit");
@@ -385,6 +398,7 @@ document.getElementById("logRoundItem").onclick = function(e) {
     pageLocked = true;
     //When pageLocked is true, the menu  icon is the left arrow
     document.getElementById("menuBtnIcon").classList.remove("fa-times");
+    document.getElementById("menuBtnIcon").classList.remove("fa-bars");
     document.getElementById("menuBtnIcon").classList.add("fa-arrow-left");
     //When pageLocked is true, the bottom bar buttons are disabled
     document.getElementById("bottomBar").classList.add("disabledButton");

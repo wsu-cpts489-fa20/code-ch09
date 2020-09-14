@@ -83,7 +83,7 @@
    <a class="menuItem feedModeItem"><span></span>&nbsp;Followed Users</a>
  
    <a class="menuItem roundsModeItem" ><span></span>&nbsp;All Rounds</a>
-   <a class="menuItem roundsModeItem" id="logRoundItem" ><span class="fas fa-plus"></span>&nbsp;Log New Round</a>
+   <a class="menuItem roundsModeItem" id="logRoundItem" onclick="logRound()"><span class="fas fa-plus"></span>&nbsp;Log New Round</a>
   
    <a class="menuItem coursesModeItem"><span></span>&nbsp;All Courses</a>
    <a class="menuItem coursesModeItem"><span></span>&nbsp;Add a Course</a>
@@ -109,6 +109,16 @@ class="nonMenuItem fas fa-flag"></span><span style="display:block;font-size:
 small">Courses</span></a> 
 </div>
 <!-- END FIXED BOTTOM BAR-->
+
+<!-- START FLOATING BUTTON  -->
+<div class="floatButton" id="floatBtnDiv">
+  <a class="nonMenuItem float" id="floatBtn" onclick="logRound()">
+      <span class="my-float fas fa-plus" id="floatBtnIcon"></span>
+  </a>
+</div>  
+<!-- END FLOATING BUTTON -->
+
+
 <!-- START MODAL DIALOG BOX DEFINITION-->
 <div id="aboutModal" class="modal" role="dialog">
   <!-- Modal content-->
