@@ -1,2 +1,2 @@
-# code-09-16
-Contains the SpeedScore Project updated through Chapter 8, in which we present speedgolf rounds in a table and allow the user to view, edit and delete rounds. 
+# code-09-18
+Contains the SpeedScore Project updated through Chapter 9, in which we tie up some loose ends and add the ability to (a) search and sort the data table and (b) autocomplete the golf course field based on a dictionary of known courses.
