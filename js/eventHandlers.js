@@ -143,18 +143,49 @@ document.getElementById("logRoundForm").onsubmit = function(e) {
   setTimeout(saveRoundData,500);
 }
 
+//addToOrUpdateRoundTable -- Helper function that adds a new round with unique index
+//roundIndex to the "My Rounds" table. The round is a "condensed view" that
+//shows only the date, course and score for the round, together with buttons to
+//view/edit the detailed round data and delete the round data.
+function addToOrUpdateRoundTable(add, roundIndex) {
+  let user = localStorage.getItem("userId");
+  let data = JSON.parse(localStorage.getItem(user));
+  let roundData = data.rounds[roundIndex]; //the round data to add/edit
+  let roundsTable = document.getElementById("myRoundsTable");
+  let roundRow;
+  if (add) { //add new row
+    //Test whether table is empty
+    if (roundsTable.rows[1].innerHTML.includes ("colspan")) {
+      //empty table! Need to remove this row before adding new one
+      roundsTable.deleteRow(1);
+     }
+     roundRow = roundsTable.insertRow(1); //insert new row
+     roundRow.id = "r-" + roundIndex; //set id of this row so we can edit/delete later
+  } else { //update existing row
+    roundRow = document.getElementById("r-" + roundIndex);
+  }
+  //Add/update row with five cols to table
+  roundRow.innerHTML = "<td>" + roundData.date + "</td><td>" +
+   roundData.course + "</td><td>" + roundData.SGS + 
+   " (" + roundData.strokes +
+   " in " + roundData.minutes + ":" + roundData.seconds + 
+   ")</td>" +
+   "<td><button onclick='editRound(" + roundIndex + ")'><span class='fas fa-eye'>" +
+   "</span>&nbsp;<span class='fas fa-edit'></span></button></td>" +
+   "<td><button onclick='confirmDelete(" + roundIndex + ")'>" +
+   "<span class='fas fa-trash'></span></button></td>";
+}
+
 //saveRoundData -- Callback function called from logRoundForm's submit handler.
 //Stops the spinner and then saves the entered round data to local storage.
 function saveRoundData() {
+  //Stop spinner
   document.getElementById("logRoundIcon").classList.remove("fas","fa-spinner", "fa-spin");
   document.getElementById("logRoundIcon").classList.add("fas","fa-save");
-
   //Retrieve from localStorage this user's rounds and roundCount
   let thisUser = localStorage.getItem("userId");
   let data = JSON.parse(localStorage.getItem(thisUser));
-  //increment roundCount since we're adding a new round
-  data.roundCount++;
-  //Initialize empty JavaScript object to store this new round
+  //Initialize empty JavaScript object to store new or updated round
   let thisRound = {}; //iniitalize empty object for this round
   let temp; //temporary value for storying DOM elements as needed
   //Store the data
@@ -170,19 +201,31 @@ function saveRoundData() {
   thisRound.seconds = document.getElementById("roundSeconds").value;
   thisRound.SGS = document.getElementById("roundSGS").value;
   thisRound.notes = document.getElementById("roundNotes").value;
-  //Add this round to associative array of rounds
-  data.rounds[data.roundCount] = thisRound;
-  //Commit updated user data to app data in local storage
+  //Determine whether we're saving new or editing existing round, saving accordingly
+  let submitBtnLabel = document.getElementById("submitBtnLabel").textContent;
+  let addNew;
+  if (submitBtnLabel == "Log Round") {
+    //Adding new round
+    addNew = true;
+    //Add 1 to roundCount, setting thisRound's roundNum to that value
+    thisRound.roundNum = ++(data.roundCount);
+    data.rounds[thisRound.roundNum] = thisRound; //add to local storage 
+  } else {
+    //Editing existing round
+    addNew = false;
+    //Grab index of round being edited from localStorage. It was set in editRound()
+    thisRound.roundNum = Number(localStorage.getItem("roundIndex")); 
+  }
+  //Add/update this round in associative array of rounds
+  data.rounds[thisRound.roundNum] = thisRound;
+  //Commit rounsd object with added/updated round to local storage
   localStorage.setItem(thisUser,JSON.stringify(data));
-  //Add new round to "My Rounds" table
-  addRoundToTable(thisRound.roundNum);
-  //Debug: Show alert box with current state of speedgolfUserData for debugging purposes
-  //data = localStorage.getItem(thisUser);
-  //alert("Data for " + thisUser + ": " +  data);
   //Go back to "My Rounds" page by programmatically clicking the menu button
   document.getElementById("menuBtn").click();
   //Clear form to ready for next use
   clearRoundForm();
+  //Add to or update "My Rounds" table
+  addToOrUpdateRoundTable(addNew, thisRound.roundNum);
 }
 
 //addRoundToTable -- Helper function that adds a new round with unique index
@@ -212,58 +255,50 @@ function addRoundToTable(roundIndex) {
    "<td><button onclick='confirmDelete(" + roundIndex + ")'>" +
    "<span class='fas fa-trash'></span></button></td>";
 }
-
-  
-  //startUp -- This function sets up the initial state of the app: Login page is
-  //visible, bottom bar is invisible, all menu items invisible except feed items,
-  //menu button disabled, UI mode = login
-  function startUp() {
-    //Hide all pages except for Login Page, which is the start page.
-    document.getElementById("feedModeDiv").style.display = "none";
-    document.getElementById("followedUsersDiv").style.display = "none";
-    document.getElementById("roundsModeDiv").style.display = "none";
-    document.getElementById("logRoundDiv").style.display = "none";
-    document.getElementById("coursesModeDiv").style.display = "none";
-    document.getElementById("searchCourseDiv").style.display = "none";
-    document.getElementById("loginModeDiv").style.display = "block";
-
-    //Clear all text from email and password fields
-    document.getElementById("emailInput").value = "";
-    document.getElementById("passwordInput").value = "";
-
-    //Set top bar text
-    document.getElementById("topBarTitle").textContent = "Welcome to SpeedScore";
-
-    //Hide the bottom bar initially
-    document.getElementById("bottomBar").style.display = "none";
-    //Hide all menu items except for Activity Feed items:
-    var feedItems = document.getElementsByClassName("feedModeItem");
-    var roundItems = document.getElementsByClassName("roundsModeItem");
-    var courseItems = document.getElementsByClassName("coursesModeItem");
-
-    for (var i = 0; i < feedItems.length; ++i) {
-        feedItems[i].style.display = "block";
-      }
-    for (var i = 0; i < roundItems.length; ++i) {
-      roundItems[i].style.display = "none";
+ 
+//startUp -- This function sets up the initial state of the app: Login page is
+//visible, bottom bar is invisible, all menu items invisible except feed items,
+//menu button disabled, UI mode = login
+function startUp() {
+  //Hide all pages except for Login Page, which is the start page.
+  document.getElementById("feedModeDiv").style.display = "none";
+  document.getElementById("followedUsersDiv").style.display = "none";
+  document.getElementById("roundsModeDiv").style.display = "none";
+  document.getElementById("logRoundDiv").style.display = "none";
+  document.getElementById("coursesModeDiv").style.display = "none";
+  document.getElementById("searchCourseDiv").style.display = "none";
+  document.getElementById("loginModeDiv").style.display = "block";
+  //Clear all text from email and password fields
+  document.getElementById("emailInput").value = "";
+  document.getElementById("passwordInput").value = "";
+  //Set top bar text
+  document.getElementById("topBarTitle").textContent = "Welcome to SpeedScore";
+  //Hide the bottom bar initially
+  document.getElementById("bottomBar").style.display = "none";
+  //Hide all menu items except for Activity Feed items:
+  var feedItems = document.getElementsByClassName("feedModeItem");
+  var roundItems = document.getElementsByClassName("roundsModeItem");
+  var courseItems = document.getElementsByClassName("coursesModeItem");
+  for (var i = 0; i < feedItems.length; ++i) {
+      feedItems[i].style.display = "block";
     }
-    for (var i = 0; i < courseItems.length; ++i) {
-        courseItems[i].style.display = "none";
-    }
+  for (var i = 0; i < roundItems.length; ++i) {
+    roundItems[i].style.display = "none";
+  }
+  for (var i = 0; i < courseItems.length; ++i) {
+      courseItems[i].style.display = "none";
+  }
+  //Disable menu button:
+  document.getElementById("menuBtn").disabled = true;
+  mode = "loginMode";
+  //set the input focus to the email field of login screen
+  document.getElementById("emailInput").focus();
 
-    //Disable menu button:
-    document.getElementById("menuBtn").disabled = true;
+  //Set default date to today in Log Round Page
+  document.getElementById("roundDate").valueAsNumber = 
+    Date.now()-(new Date()).getTimezoneOffset()*60000;
 
-    mode = "loginMode";
-
-    //set the input focus to the email field of login screen
-    document.getElementById("emailInput").focus();
-
-    //Set default date to today in Log Round Page
-    document.getElementById("roundDate").valueAsNumber = 
-      Date.now()-(new Date()).getTimezoneOffset()*60000;
-
-  }; //Startup
+}; //Startup
 
 //clearRoundForm -- Helper function that clears out data previously entered into
 //the "Log New Round" form and resets all fields to their default values
@@ -329,8 +364,11 @@ document.getElementById("logRoundItem").onclick = function(e) {
     //Swap pages:
     document.getElementById("roundsModeDiv").style.display = "none";
     document.getElementById("logRoundDiv").style.display = "block";
-    //Change page title:
-    document.getElementById("topBarTitle").textContent = "Log New Round";  
+    //Change page title, submit button title and icon
+    document.getElementById("topBarTitle").textContent = "Log New Round"; 
+    document.getElementById("logRoundIcon").classList.remove("fa-edit");
+    document.getElementById("logRoundIcon").classList.add("fa-save");
+    document.getElementById("submitBtnLabel").textContent = "Log Round";
     //Set pageLocked to true, thus indicating that we're on a page that may only
     //be exited by clicking on the left arrow at top left
     pageLocked = true;
@@ -358,8 +396,8 @@ function editRound(roundIndex) {
   localStorage.setItem("roundIndex",roundIndex);
 
   //Transition to round view/edit page with "Update" label for form submit button
-  document.getElementById("logRoundIcon").classList.remove("fas","fa-save");
-  document.getElementById("logRoundIcon").classList.add("fas","fa-edit");
+  document.getElementById("logRoundIcon").classList.remove("fa-save");
+  document.getElementById("logRoundIcon").classList.add("fa-edit");
   document.getElementById("submitBtnLabel").textContent = "Update Round";
   transitionToLockedPage("logRoundDiv","View/Edit Round");
 }
