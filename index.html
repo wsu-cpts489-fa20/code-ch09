@@ -247,15 +247,26 @@ small">Courses</span></a>
   <!-- Rounds page displaying the user's round history -->
   <div id="roundsModeDiv" class="roundsModeDiv paddedPage">
     <h1></h1>
+    <div class="input-group center-search">
+        <span class="input-group-prepend">
+            <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
+        </span>
+        <input class="form-control py-2 border-left-0 border" placeholder="Search Rounds" type="search" value="" id="searchRounds"
+          onkeyup="searchRoundsTable(this.value)" onsearch="searchRoundsTable(this.value)">
+    </div>
+    <p></p>
     <table id="myRoundsTable" class="table table-hover">
       <thead class="thead-light">
-        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(1)')" style="cursor:pointer">
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(1)')"
+          style="cursor:pointer">
           <span class="fas fa-sort"></span>&nbsp;Date
         </th>
-        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(2)')" style="cursor:pointer">
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(2)')"
+          style="cursor:pointer">
           <span class="fas fa-sort"></span>&nbsp;Course
         </th>
-        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(3)')" style="cursor:pointer">
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(3)')" 
+          style="cursor:pointer">
           <span class="fas fa-sort"></span>&nbsp;Score
         </th>
         <th>View/Edit...</th>

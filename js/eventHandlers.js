@@ -169,6 +169,7 @@ function addToOrUpdateRoundTable(add, roundIndex) {
       roundsTable.deleteRow(1);
      }
      roundRow = roundsTable.insertRow(1); //insert new row
+     roundRow.classList.add("row-item"); //Needed for sorting
      roundRow.id = "r-" + roundIndex; //set id of this row so we can edit/delete later
   } else { //update existing row
     roundRow = document.getElementById("r-" + roundIndex);
@@ -464,3 +465,34 @@ function changeSeconds() {
     updateSGS();
   }
   
+  //searchRoundsTable -- This function should be called whenever the 
+  //user types a character into the search box above the Rounds table.
+  //It displays only those table rows that match searchVal, the current
+  // the contents of the search box. Adapted from
+  //https://www.w3schools.com/howto/howto_js_filter_table.asp
+  function searchRoundsTable(searchVal) {
+    searchVal = searchVal.toUpperCase(); //case insensitive
+    let table = document.getElementById("myRoundsTable");
+    let tr = table.getElementsByTagName("tr");
+    let td, rowText, i, j, txtVal;
+
+    //Loop through all table rows, hiding those who don't match the search query
+    for (i = 1; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td");
+      rowText = "";
+      for (j = 0; j < 3; ++j) { //only consider Date, Course, Score cols
+        txtVal = td[j].textContent;
+        if (j == 2) { //Remove "in" from text string since it is meaningless
+          txtVal = txtVal.replace(/in/g,"");
+        }
+        rowText += txtVal;
+      }
+      if (rowText != "") {
+        if (rowText.toUpperCase().indexOf(searchVal) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
