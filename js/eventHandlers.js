@@ -253,6 +253,7 @@ function addRoundToTable(roundIndex) {
  }
 //Write new row with five cols to table
  let thisRound = roundsTable.insertRow(1);
+ thisRound.classList.add("row-item"); //Needed for sorting
  thisRound.id = "r-" + roundIndex; //set unique id of this row so we can edit/delete later
  thisRound.innerHTML = "<td>" + rounds[roundIndex].date + "</td><td>" +
    rounds[roundIndex].course + "</td><td>" + rounds[roundIndex].SGS + 

@@ -249,9 +249,15 @@ small">Courses</span></a>
     <h1></h1>
     <table id="myRoundsTable" class="table table-hover">
       <thead class="thead-light">
-        <th onclick="w3.sortHTML('#myRoundsTable','.item','td:nth-child(1)')"><span class="fas fa-sort"></span>Date</th>
-        <th>Course</th>
-        <th>Score</th>
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(1)')" style="cursor:pointer">
+          <span class="fas fa-sort"></span>&nbsp;Date
+        </th>
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(2)')" style="cursor:pointer">
+          <span class="fas fa-sort"></span>&nbsp;Course
+        </th>
+        <th onclick="w3.sortHTML('#myRoundsTable','.row-item','td:nth-child(3)')" style="cursor:pointer">
+          <span class="fas fa-sort"></span>&nbsp;Score
+        </th>
         <th>View/Edit...</th>
         <th>Delete</th>
       </thead>
