@@ -30,9 +30,7 @@
     href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
     crossorigin="anonymous">
-    
-   
-   
+       
     <!-- Our local CSS stylesheet -->
     <link rel="stylesheet" href = "styles/navbar.css">
     <link rel="stylesheet" href = "styles/modal.css">
@@ -251,7 +249,7 @@ small">Courses</span></a>
     <h1></h1>
     <table id="myRoundsTable" class="table table-hover">
       <thead class="thead-light">
-        <th>Date</th>
+        <th onclick="w3.sortHTML('#myRoundsTable','.item','td:nth-child(1)')"><span class="fas fa-sort"></span>Date</th>
         <th>Course</th>
         <th>Score</th>
         <th>View/Edit...</th>
@@ -356,6 +354,7 @@ small">Courses</span></a>
   <!-- END APP PAGE DEFINITIONS -->
     
   <!-- Begin SCRIPT section of document. -->
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
   <script src="js/eventHandlers.js"></script>
   <script src="js/startup.js"></script>
 </html>
