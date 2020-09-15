@@ -423,6 +423,7 @@ function editRound(roundIndex) {
   //Transition to round view/edit page with "Update" label for form submit button
   document.getElementById("logRoundIcon").classList.remove("fa-save");
   document.getElementById("logRoundIcon").classList.add("fa-edit");
+  document.getElementById("floatBtnDiv").style.display = "none"; //hide floating button
   document.getElementById("submitBtnLabel").textContent = "Update Round";
   transitionToLockedPage("logRoundDiv","View/Edit Round");
 }
