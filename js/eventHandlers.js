@@ -322,6 +322,7 @@ function startUp() {
     }
     //Hide the floating button in case user logged out from Rounds Mode
     document.getElementById("floatBtnDiv").style.display = "none";
+
 }; //Startup
 
 //clearRoundForm -- Helper function that clears out data previously entered into
@@ -465,34 +466,49 @@ function changeSeconds() {
     updateSGS();
   }
   
-  //searchRoundsTable -- This function should be called whenever the 
-  //user types a character into the search box above the Rounds table.
-  //It displays only those table rows that match searchVal, the current
-  // the contents of the search box. Adapted from
-  //https://www.w3schools.com/howto/howto_js_filter_table.asp
-  function searchRoundsTable(searchVal) {
-    searchVal = searchVal.toUpperCase(); //case insensitive
-    let table = document.getElementById("myRoundsTable");
-    let tr = table.getElementsByTagName("tr");
-    let td, rowText, i, j, txtVal;
+//searchRoundsTable -- This function should be called whenever the 
+//user types a character into the search box above the Rounds table.
+//It displays only those table rows that match searchVal, the current
+// the contents of the search box. Adapted from
+//https://www.w3schools.com/howto/howto_js_filter_table.asp
+function searchRoundsTable(searchVal) {
+  searchVal = searchVal.toUpperCase(); //case insensitive
+  let table = document.getElementById("myRoundsTable");
+  let tr = table.getElementsByTagName("tr");
+  let td, rowText, i, j, txtVal;
 
-    //Loop through all table rows, hiding those who don't match the search query
-    for (i = 1; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td");
-      rowText = "";
-      for (j = 0; j < 3; ++j) { //only consider Date, Course, Score cols
-        txtVal = td[j].textContent;
-        if (j == 2) { //Remove "in" from text string since it is meaningless
-          txtVal = txtVal.replace(/in/g,"");
-        }
-        rowText += txtVal;
-      }
-      if (rowText != "") {
-        if (rowText.toUpperCase().indexOf(searchVal) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
+  //Loop through all table rows, hiding those who don't match the search query
+  for (i = 1; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td");
+    rowText = "";
+    for (j = 0; j < 3; ++j) { //only consider Date, Course, Score cols
+      txtVal = td[j].textContent;
+      rowText += txtVal;
+    }
+    if (rowText != "") {
+      if (rowText.toUpperCase().indexOf(searchVal) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
       }
     }
   }
+}
+
+//autoCompleteCourse--Presents an updated autocomplete list in
+//the "courseList" datalist item whenever the user types a 
+//character into the "roundCourse" text field
+function autoCompleteCourse(val) {
+  let courseDropdown = document.getElementById("courseList");
+  courseDropdown.innerHTML = ""; //Clear current autocomplete list
+  let courseItems = "";
+  for (let i = 0; i < courses.length; ++i) {
+    if(((courses[i].toLowerCase()).indexOf(val.toLowerCase()))>-1) {
+        //We have a partial match between val and a course:
+        //Add it to the autocomplete list 
+        courseItems +=  '<option value="' + courses[i] + '" />';
+    }
+  }
+  //Update dropdown menu with all autocomplete items
+  courseDropdown.innerHTML = courseItems; 
+}

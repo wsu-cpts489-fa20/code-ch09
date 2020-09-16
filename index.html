@@ -293,10 +293,16 @@ small">Courses</span></a>
       </label>
       <p></p>
       <label for="roundCourse">Course:
-        <input id="roundCourse" 
+        <input id="roundCourse" list="courseList"
+               autocomplete="off"
                class="form-control form-center" type="text" 
-               placeholder="Course played" size="50" maxlength="50" required>
-        </label>
+               placeholder="Course played" size="50" maxlength="50" 
+               onkeyup="autoCompleteCourse(this.value)" 
+               required>
+        <datalist id="courseList">
+          <!--Will be populated with autocomplete values-->
+        </datalist>
+      </label>
      <p></p>
      <label for="roundType">Type:
       <select name="roundType" id="roundType" class="form-control form-center">

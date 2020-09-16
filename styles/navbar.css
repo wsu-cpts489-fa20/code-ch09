@@ -251,3 +251,8 @@ body {
     margin: 0 auto;
     width: 70%;
 }
+
+datalist {
+    max-height: 150px;
+    overflow-y: auto;
+}
